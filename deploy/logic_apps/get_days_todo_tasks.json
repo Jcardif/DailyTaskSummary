@@ -1,0 +1,129 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "For_each": {
+                "actions": {
+                    "Condition": {
+                        "actions": {
+                            "Append_to_array_variable": {
+                                "inputs": {
+                                    "name": "TodaysItems",
+                                    "value": "@items('For_each')"
+                                },
+                                "runAfter": {},
+                                "type": "AppendToArrayVariable"
+                            }
+                        },
+                        "expression": {
+                            "and": [
+                                {
+                                    "greaterOrEquals": [
+                                        "@items('For_each')?['lastModifiedDateTime']",
+                                        "@formatDateTime(addDays(utcNow(), -1), 'yyyy-MM-dd')"
+                                    ]
+                                },
+                                {
+                                    "less": [
+                                        "@items('For_each')?['lastModifiedDateTime']",
+                                        "@formatDateTime(addDays(utcNow(), 1), 'yyyy-MM-dd')"
+                                    ]
+                                }
+                            ]
+                        },
+                        "runAfter": {},
+                        "type": "If"
+                    }
+                },
+                "foreach": "@body('List_to-do''s_by_folder_(V2)')",
+                "runAfter": {
+                    "Initialize_variable_2": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Foreach"
+            },
+            "Initialize_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "Date",
+                            "type": "string",
+                            "value": "@{formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss.fffffffZ')}"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "List_to-do's_by_folder_(V2)": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Initialize_variable_2": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "TodaysItems",
+                            "type": "array"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "List_to-do's_by_folder_(V2)": {
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['todo']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/lists/@{encodeURIComponent('AAMkADI2ZTk0YjQ3LTY1ZWYtNDM1Ni04OWFkLTM0M2E4NDk4NDMzYQAuAAAAAACMX806WtwwQ6FFm5q4WRJNAQCIkBio4xPkQ6h5JVK7J1QWAAFu8I3XAAA=')}/tasks",
+                    "queries": {
+                        "$top": 999
+                    }
+                },
+                "runAfter": {},
+                "type": "ApiConnection"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "Recurrence": {
+                "evaluatedRecurrence": {
+                    "frequency": "Hour",
+                    "interval": 1
+                },
+                "recurrence": {
+                    "frequency": "Hour",
+                    "interval": 1
+                },
+                "type": "Recurrence"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "todo": {
+                    "connectionId": "/subscriptions/a1a27566-3e3c-42d7-a372-692095cd8521/resourceGroups/DailyTaskSummary_group/providers/Microsoft.Web/connections/todo",
+                    "connectionName": "todo",
+                    "id": "/subscriptions/a1a27566-3e3c-42d7-a372-692095cd8521/providers/Microsoft.Web/locations/westeurope/managedApis/todo"
+                }
+            }
+        }
+    }
+}
