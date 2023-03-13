@@ -24,7 +24,7 @@ resource vaults_WorkSummaryVault_name_resource 'Microsoft.KeyVault/vaults@2022-1
   properties: {
     sku: {
       family: 'A'
-      name: 'Standard'
+      name: 'standard'
     }
     tenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
     accessPolicies: [
