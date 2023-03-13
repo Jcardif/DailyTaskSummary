@@ -8,7 +8,7 @@
                     "where": "@equals(formatDateTime(item()?['lastModifiedDateTime'], 'yyyy-MM-dd'), formatDateTime(utcNow(), 'yyyy-MM-dd'))"
                 },
                 "runAfter": {
-                    "Initialize_variable_2": [
+                    "Initialize_variable_4": [
                         "Succeeded"
                     ]
                 },
@@ -23,12 +23,12 @@
                                 "Description": "@{body('Parse_JSON_')?['body']?['content']}",
                                 "Importance": "@{body('Parse_JSON_')?['importance']}",
                                 "Status": "@{body('Parse_JSON_')?['status']}",
-                                "SubTasks": "@if(equals(body('Parse_JSON_')?['checklistItems'], null), json('[]'), body('Parse_JSON_')?['checklistItems'])",
+                                "SubTasks": "@body('Select')",
                                 "TaskTitle": "@{body('Parse_JSON_')?['title']}"
                             }
                         },
                         "runAfter": {
-                            "Parse_JSON_": [
+                            "Select": [
                                 "Succeeded"
                             ]
                         },
@@ -118,6 +118,21 @@
                         },
                         "runAfter": {},
                         "type": "ParseJson"
+                    },
+                    "Select": {
+                        "inputs": {
+                            "from": "@if(equals(body('Parse_JSON_')?['checklistItems'], null), json('[]'), body('Parse_JSON_')?['checklistItems'])",
+                            "select": {
+                                "displayName": "@item()?['displayName']",
+                                "isChecked": "@item()?['isChecked']"
+                            }
+                        },
+                        "runAfter": {
+                            "Parse_JSON_": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "Select"
                     }
                 },
                 "foreach": "@body('Filter_array')",
@@ -224,6 +239,23 @@
                 },
                 "runAfter": {
                     "Initialize_TaksInString": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Initialize_variable_4": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "SubItems",
+                            "type": "array",
+                            "value": []
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_variable_2": [
                         "Succeeded"
                     ]
                 },
