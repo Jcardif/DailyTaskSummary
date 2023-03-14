@@ -54,7 +54,7 @@ namespace TasksSummarizer.Functions.Functions
             var openAiResponse = await chatService.CreateCompletionAsync(prompt);
 
             response = req.CreateResponse(HttpStatusCode.OK);
-            await HttpResponseDataExtensions.WriteStringAsync(response, openAiResponse?.Choices?.FirstOrDefault()?.Text ?? "Nothing to show");
+            await response.WriteStringAsync(openAiResponse?.Choices?.FirstOrDefault()?.Text ?? "Nothing to show");
 
             return response;
         }
