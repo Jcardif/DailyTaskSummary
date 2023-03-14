@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Newtonsoft.Json;
 using TaskSummarizer.Shared.Models;
+using Newtonsoft.Json;
 using static TaskSummarizer.Shared.Helpers.OpenAiHelpers;
 
 namespace TaskSummarizer.Shared.Services
@@ -12,15 +12,17 @@ namespace TaskSummarizer.Shared.Services
     {
         private string ApiKey { get; }
         private string BaseUrl { get; }
+        private string DeploymentId { get; }
         private HttpDataService HttpDataService { get; }
         
         
-        public OpenAiChatService(string apiKey, string baseUrl)
+        public OpenAiChatService(string apiKey, string baseUrl, string deploymentId)
         {
             ApiKey = apiKey;
             BaseUrl = baseUrl;
+            DeploymentId = deploymentId;
 
-            var endpointUrl = $"https://{baseUrl}/openai/deployments/gpt-35-turbo/completions?api-version=2022-12-01";
+            var endpointUrl = $"{baseUrl}/openai/deployments/{DeploymentId}/completions?api-version=2022-12-01";
             HttpDataService = new HttpDataService(endpointUrl);
         }
 
@@ -56,17 +58,12 @@ namespace TaskSummarizer.Shared.Services
                 TopP = 0.95
             };
 
-            var response = await HttpDataService.PostAsJsonAsync<OpenAiCompletion>("", completion, "api-key", ApiKey);
+            var content = await HttpDataService.PostAsJsonAsync<OpenAiCompletion>("", completion, ApiKey);
+            if (content == null) return null;
+            var response = JsonConvert.DeserializeObject<OpenAiResponse>(content);
 
-            if (response is OpenAiResponse openAiResponse)
-            {
-                return openAiResponse;
-            }
+            return response;
 
-            else
-            {
-                return null;
-            }
         }
     }
 }

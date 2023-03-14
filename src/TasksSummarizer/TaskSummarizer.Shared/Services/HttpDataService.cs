@@ -12,24 +12,16 @@ namespace TaskSummarizer.Shared.Services
         {
 
             _client = new HttpClient();
+            _client.BaseAddress = new Uri(defaultBaseUrl);
 
-            if (!string.IsNullOrEmpty(defaultBaseUrl))
-                _client.BaseAddress = defaultBaseUrl.EndsWith("/")
-                    ? new Uri(defaultBaseUrl)
-                    : new Uri($"{defaultBaseUrl}/");
         }
 
         
 
-        public async Task<T?> GetAsync<T>(string uri, string? scheme = null, string? parameter = null, List<(string name, List<string> value)>? headers = null, bool forceRefresh = false)
+        public async Task<T?> GetAsync<T>(string uri)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
 
-            AddAuthorizationHeader(scheme, parameter);
-
-            if (headers != null)
-                foreach (var header in headers)
-                    request.Headers.Add(header.name, header.value);
 
             var response = await _client.SendAsync(request);
 
@@ -42,42 +34,23 @@ namespace TaskSummarizer.Shared.Services
             throw new HttpRequestException($"Error calling {uri} - {response.StatusCode}");
         }
 
-        public async Task<object?> PostAsJsonAsync<T>(string uri, T item, string? scheme = null, string? parameter =null, List<(string name, List<string> value)>? headers = null, bool forceRefresh = false)
+        public async Task<string?> PostAsJsonAsync<T>(string uri, T item, string apiKey)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, uri);
 
-            AddAuthorizationHeader(scheme, parameter);
+            var jsonBody = JsonConvert.SerializeObject(item);
+            var httpContent = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-            if (headers != null)
-                foreach (var header in headers)
-                    request.Headers.Add(header.name, header.value);
+            httpContent.Headers.Add("api-key", apiKey);
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
-
-            var response = await _client.SendAsync(request);
+            var response = await _client.PostAsync("", httpContent);
 
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject(content);
+                return content;
             }
 
             throw new HttpRequestException($"Error calling {uri} - {response.StatusCode}");
-        }
-        
-        
-
-
-        // Add this to all public methods
-        private void AddAuthorizationHeader(string? scheme, string? parameter)
-        {
-            if (string.IsNullOrEmpty(scheme) || string.IsNullOrEmpty(parameter))
-            {
-                _client.DefaultRequestHeaders.Authorization = null;
-                return;
-            }
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme, parameter);
         }
     }
 

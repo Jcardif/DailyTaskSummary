@@ -4,6 +4,9 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using TaskSummarizer.Shared.Models;
+using TaskSummarizer.Shared.Services;
 
 namespace TasksSummarizer.Functions.Functions
 {
@@ -31,10 +34,60 @@ namespace TasksSummarizer.Functions.Functions
             var apiKey = config.GetValue<string>("AzureOpenAI:APIKey");
             var resourceName = config.GetValue<string>("AzureOpenAI:ResourceName");
             var deploymentId = config.GetValue<string>("AzureOpenAI:DeploymentId");
+            var baseUrl = config.GetValue<string>("AzureOpenAI:BaseUrl");
 
-            
+            var items = new List<TaskItem>()
+            {
+                new TaskItem()
+                {
+                    Description = "",
+                    Importance = "normal",
+                    Status = "notStarted",
+                    SubTasks = new List<TaskItemSubTask>
+                    {
+                        new TaskItemSubTask()
+                        {
+                            DisplayName = "respond to E",
+                            SubTaskStatus = "completed"
+                        },
+                        new TaskItemSubTask()
+                        {
+                            DisplayName = "check for additional intesting topics",
+                            SubTaskStatus = "completed"
+                        }
+                    },
+                    TaskTitle = "Check watercooler moderation"
+                },
+                new TaskItem()
+                {
+                    Description = "",
+                    Importance = "normal",
+                    Status = "notStarted",
+                    SubTasks = new List<TaskItemSubTask>
+                    {
+                        new TaskItemSubTask()
+                        {
+                            DisplayName = "design powerbi dashboards",
+                            SubTaskStatus = "completed"
+                        },
+                        new TaskItemSubTask()
+                        {
+                            DisplayName = "review what goes to osdc blogs",
+                            SubTaskStatus = "in progress"
+                        }
+                    },
+                    TaskTitle = "Synapse Blog 2"
+                }
+            };
 
-            return req.CreateResponse(HttpStatusCode.OK);
+            var chatService = new OpenAiChatService(apiKey, baseUrl, deploymentId);
+            var prompt = chatService.GetPromptFromTasks(items, "Peter Parker");
+            var openAiResponse = await chatService.CreateCompletionAsync(prompt);
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteStringAsync(openAiResponse?.Choices?.FirstOrDefault()?.Text ?? "Nothing to show");
+
+            return response;
         }
     }
 }
