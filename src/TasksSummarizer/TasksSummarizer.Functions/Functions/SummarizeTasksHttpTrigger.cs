@@ -21,8 +21,21 @@ namespace TasksSummarizer.Functions.Functions
         }
 
         [Function("SummarizeTasksHttpTrigger")]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
         {
+            // get tasksSummary from json body
+            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var items = JsonConvert.DeserializeObject<List<TaskItem>>(requestBody);
+
+            HttpResponseData? response;
+
+            if (items is null || items.Count == 0)
+            {
+                response = req.CreateResponse(HttpStatusCode.BadRequest);
+                await response.WriteStringAsync("Please pass a list of task items");
+                return response;
+            }
+
             // Get settings from local.setting
             var config = new ConfigurationBuilder()
                 .SetBasePath(Environment.CurrentDirectory)
@@ -39,55 +52,11 @@ namespace TasksSummarizer.Functions.Functions
 
             baseSystemMessage = baseSystemMessage.Replace("Peter Parker", "Steven Strange");
 
-            var items = new List<TaskItem>()
-            {
-                new TaskItem()
-                {
-                    Description = "",
-                    Importance = "normal",
-                    Status = "notStarted",
-                    SubTasks = new List<TaskItemSubTask>
-                    {
-                        new TaskItemSubTask()
-                        {
-                            DisplayName = "respond to Elizabeth",
-                            SubTaskStatus = "completed"
-                        },
-                        new TaskItemSubTask()
-                        {
-                            DisplayName = "check for additional intesting topics",
-                            SubTaskStatus = "completed"
-                        }
-                    },
-                    TaskTitle = "Check watercooler moderation"
-                },
-                new TaskItem()
-                {
-                    Description = "",
-                    Importance = "normal",
-                    Status = "notStarted",
-                    SubTasks = new List<TaskItemSubTask>
-                    {
-                        new TaskItemSubTask()
-                        {
-                            DisplayName = "design powerbi dashboards",
-                            SubTaskStatus = "completed"
-                        },
-                        new TaskItemSubTask()
-                        {
-                            DisplayName = "review what goes to osdc blogs",
-                            SubTaskStatus = "in progress"
-                        }
-                    },
-                    TaskTitle = "Synapse Blog 2"
-                }
-            };
-
             var chatService = new OpenAiChatService(apiKey, baseUrl, deploymentId);
             var prompt = GetPromptFromTasks(items, baseSystemMessage);
             var openAiResponse = await chatService.CreateCompletionAsync(prompt);
 
-            var response = req.CreateResponse(HttpStatusCode.OK);
+            response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteStringAsync(openAiResponse?.Choices?.FirstOrDefault()?.Text ?? "Nothing to show");
 
             return response;
