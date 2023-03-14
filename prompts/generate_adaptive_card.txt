@@ -10,6 +10,7 @@ Additional Instructions:
 - Don't include any actions in the adaptive card
 - Always Greet the team the card is being sent to
 - Always include a title
+- Always use line breaks to split long sentences to ensure content wraps in the card
 
 Here is the summary of the work done
 
