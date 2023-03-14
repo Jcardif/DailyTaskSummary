@@ -26,5 +26,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		TaskSummarizer.Shared\TaskSummarizer.Shared.projitems*{26398a6e-4918-4e99-8120-eaf7fcd23a04}*SharedItemsImports = 13
+		TaskSummarizer.Shared\TaskSummarizer.Shared.projitems*{da03b650-398a-4073-9f76-2fd2e76fc750}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

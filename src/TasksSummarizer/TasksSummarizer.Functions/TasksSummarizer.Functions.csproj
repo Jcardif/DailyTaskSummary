@@ -24,4 +24,5 @@
   <ItemGroup>
     <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
   </ItemGroup>
+  <Import Project="..\TaskSummarizer.Shared\TaskSummarizer.Shared.projitems" Label="Shared" />
 </Project>
