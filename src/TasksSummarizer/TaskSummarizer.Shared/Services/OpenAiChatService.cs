@@ -26,11 +26,11 @@ namespace TaskSummarizer.Shared.Services
             HttpDataService = new HttpDataService(endpointUrl);
         }
 
-        public string GetPromptFromTasks(List<TaskItem> taskItems, string fullName)
+        public string GetPromptFromTasks(List<TaskItem> taskItems, string baseSystemMessage)
         {
             var tasks = JsonConvert.SerializeObject(taskItems, Formatting.Indented);
 
-            var systemMessage = GetSummarizerSystemMessage(fullName);
+            var systemMessage = GetSummarizerSystemMessage(baseSystemMessage);
 
             const string intro = "Here are the tasks done, generate the summary in 2-4 bullet points, in prose format:";
             var serializedTasks = JsonConvert.SerializeObject(taskItems, Formatting.Indented);

@@ -36,6 +36,11 @@ namespace TasksSummarizer.Functions.Functions
             var deploymentId = config.GetValue<string>("AzureOpenAI:DeploymentId");
             var baseUrl = config.GetValue<string>("AzureOpenAI:BaseUrl");
 
+            var filePath = Path.Combine(Environment.CurrentDirectory, "Prompts", "SummarizeText.txt");
+            var baseSystemMessage = await File.ReadAllTextAsync(filePath);
+
+            baseSystemMessage = baseSystemMessage.Replace("Peter Parker", "Steven Strange");
+
             var items = new List<TaskItem>()
             {
                 new TaskItem()
@@ -47,7 +52,7 @@ namespace TasksSummarizer.Functions.Functions
                     {
                         new TaskItemSubTask()
                         {
-                            DisplayName = "respond to E",
+                            DisplayName = "respond to Elizabeth",
                             SubTaskStatus = "completed"
                         },
                         new TaskItemSubTask()
@@ -81,7 +86,7 @@ namespace TasksSummarizer.Functions.Functions
             };
 
             var chatService = new OpenAiChatService(apiKey, baseUrl, deploymentId);
-            var prompt = chatService.GetPromptFromTasks(items, "Peter Parker");
+            var prompt = chatService.GetPromptFromTasks(items, baseSystemMessage);
             var openAiResponse = await chatService.CreateCompletionAsync(prompt);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
