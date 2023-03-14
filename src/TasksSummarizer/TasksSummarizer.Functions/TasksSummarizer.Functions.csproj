@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.6.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.12" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.7.0-preview2" />
+    <PackageReference Include="OpenAI" Version="1.6.0" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
