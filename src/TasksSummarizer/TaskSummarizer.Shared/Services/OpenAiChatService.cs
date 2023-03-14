@@ -26,26 +26,6 @@ namespace TaskSummarizer.Shared.Services
             HttpDataService = new HttpDataService(endpointUrl);
         }
 
-        public string GetPromptFromTasks(List<TaskItem> taskItems, string baseSystemMessage)
-        {
-            var tasks = JsonConvert.SerializeObject(taskItems, Formatting.Indented);
-
-            var systemMessage = GetSummarizerSystemMessage(baseSystemMessage);
-
-            const string intro = "Here are the tasks done, generate the summary in 2-4 bullet points, in prose format:";
-            var serializedTasks = JsonConvert.SerializeObject(taskItems, Formatting.Indented);
-
-            var userMessage = new Dictionary<string, string>()
-            {
-                { "sender", "user" },
-                { "text", $"{intro}\n\n{serializedTasks}" }
-            };
-
-            var prompt = CreatePrompt(userMessage, systemMessage);
-
-            return prompt;
-        }
-
         public async Task<OpenAiResponse?> CreateCompletionAsync(string prompt)
         {
             var completion = new OpenAiCompletion()

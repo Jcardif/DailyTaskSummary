@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using TaskSummarizer.Shared.Models;
 using TaskSummarizer.Shared.Services;
+using static TaskSummarizer.Shared.Helpers.OpenAiHelpers;
 
 namespace TasksSummarizer.Functions.Functions
 {
@@ -22,8 +23,6 @@ namespace TasksSummarizer.Functions.Functions
         [Function("SummarizeTasksHttpTrigger")]
         public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
-
             // Get settings from local.setting
             var config = new ConfigurationBuilder()
                 .SetBasePath(Environment.CurrentDirectory)
@@ -32,7 +31,6 @@ namespace TasksSummarizer.Functions.Functions
                 .Build();
 
             var apiKey = config.GetValue<string>("AzureOpenAI:APIKey");
-            var resourceName = config.GetValue<string>("AzureOpenAI:ResourceName");
             var deploymentId = config.GetValue<string>("AzureOpenAI:DeploymentId");
             var baseUrl = config.GetValue<string>("AzureOpenAI:BaseUrl");
 
@@ -86,7 +84,7 @@ namespace TasksSummarizer.Functions.Functions
             };
 
             var chatService = new OpenAiChatService(apiKey, baseUrl, deploymentId);
-            var prompt = chatService.GetPromptFromTasks(items, baseSystemMessage);
+            var prompt = GetPromptFromTasks(items, baseSystemMessage);
             var openAiResponse = await chatService.CreateCompletionAsync(prompt);
 
             var response = req.CreateResponse(HttpStatusCode.OK);

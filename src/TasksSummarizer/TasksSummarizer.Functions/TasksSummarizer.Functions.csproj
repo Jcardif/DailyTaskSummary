@@ -20,6 +20,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
+    <None Update="Prompts\GenerateAdaptiveCard.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Prompts\SummarizeText.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
