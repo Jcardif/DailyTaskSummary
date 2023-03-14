@@ -9,9 +9,11 @@
     <Import_RootNamespace>TaskSummarizer.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Helpers\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\OpenAiHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\OpenAiCompletion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\OpenAiResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TaskItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\HttpDataService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\OpenAiChatService.cs" />
   </ItemGroup>
 </Project>

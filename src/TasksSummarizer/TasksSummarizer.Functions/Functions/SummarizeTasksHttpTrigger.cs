@@ -4,8 +4,6 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using OpenAI_API;
-using OpenAI_API.Chat;
 
 namespace TasksSummarizer.Functions.Functions
 {
