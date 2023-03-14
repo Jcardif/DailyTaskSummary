@@ -9,6 +9,9 @@
     <Import_RootNamespace>TaskSummarizer.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)NewFolder\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Helpers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Services\HttpDataService.cs" />
   </ItemGroup>
 </Project>
