@@ -40,6 +40,8 @@ namespace TasksSummarizer.Functions.Functions
                 return response;
             }
 
+            
+
             // Get settings from local.setting
             var config = new ConfigurationBuilder()
                 .SetBasePath(Environment.CurrentDirectory)

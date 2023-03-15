@@ -11,6 +11,7 @@ namespace TaskSummarizer.Shared.Models
         public string? Status { get; set; }
         public List<TaskItemSubTask>? SubTasks { get; set; } 
         public string? TaskTitle { get; set; }
+        public string? Collaborators {get; set;}
     }
 
     public class TaskItemSubTask
