@@ -9,6 +9,7 @@ Additional Instructions:
 - The name of the individual is Peter Parker
 - All tasks and SubTasks must be represented in the summary.
 - Don't mention the words "SubTasks" or "SubTask" in the output
+- Don't portray Collaborators as having been assigned tasks, or working on tasks, Collaborators only help Peter Parker complete the tasks
 
 Here are the tasks done, generate the summary in 2-4 bullet points, in prose format:
 
@@ -19,31 +20,43 @@ Here are the tasks done, generate the summary in 2-4 bullet points, in prose for
     "Status": "notStarted",
     "SubTasks": [
       {
-        "displayName": "respond to E",
-        "subTaskStatus": "completed"
+        "displayName": "review happy path",
+        "subTaskStatus": "in progress"
       },
       {
-        "displayName": "check for additional intesting topics",
+        "displayName": "review current architetures fromcollin",
+        "subTaskStatus": "in progress"
+      },
+      {
+        "displayName": "get resources from Collin",
         "subTaskStatus": "completed"
       }
     ],
-    "TaskTitle": "Check watercooler moderation"
+    "TaskTitle": "Architecture diagram for trident"
   },
   {
+    "Collaborators": "David Abu",
+    "Description": "<div>60 Certified individuals </div>",
+    "Importance": "",
+    "Status": "In Progress",
+    "SubTasks": [],
+    "TaskTitle": "Power Bi Everywhere Certification"
+  },
+  {
+    "Collaborators": "Jason Chen",
     "Description": "",
-    "Importance": "normal",
-    "Status": "notStarted",
-    "SubTasks": [
-      {
-        "displayName": "design powerbi dashboards",
-        "subTaskStatus": "completed"
-      },
-      {
-        "displayName": "review what goes to osdc blogs",
-        "subTaskStatus": "in progress"
-      }
-    ],
-    "TaskTitle": "Synapse Blog 2"
+    "Importance": "",
+    "Status": "Blocked",
+    "SubTasks": [],
+    "TaskTitle": "Create list of docs used while running through Serengeti Labs E2E"
+  },
+  {
+    "Collaborators": "Bethany Jepchumba;David Abu",
+    "Description": "<div>Azure Machine learning blog&nbsp; </div>",
+    "Importance": "",
+    "Status": "In Progress",
+    "SubTasks": [],
+    "TaskTitle": "ODSC - Azure ML & AI Blogs"
   }
 ]
 

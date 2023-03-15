@@ -58,12 +58,30 @@ namespace TasksSummarizer.Functions.Functions
             var prompt = GetAdaptiveCardPrompt(taskSummary, baseSystemMessage);
             var openAiResponse = await chatService.CreateCompletionAsync(prompt);
 
-            var card = new { adaptiveCard = openAiResponse?.Choices?.FirstOrDefault()?.Text ?? "" };
+            var text = openAiResponse?.Choices?.FirstOrDefault()?.Text;
+            var card = EnsureBraces(text ?? "{}");
 
             response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(card);
 
             return response;
         }
+
+        public static string EnsureBraces(string input)
+        {
+            int startIndex = input.IndexOf("{");
+            int endIndex = input.LastIndexOf("}");
+
+            if (startIndex == -1 || endIndex == -1)
+            {
+                return string.Empty; // or throw an exception, depending on your requirements
+            }
+            else
+            {
+                return input.Substring(startIndex, endIndex - startIndex + 1);
+            }
+        }
+
+
     }
 }

@@ -5,11 +5,11 @@ Additional Instructions:
 - The output Must be the adaptive card Json schema only and nothing else
 - Don't include anything else in the output apart from the Json schema
 - Don't include any harmful content
-- Always include emojis
+- You Always include emojis
 - Don't write any content that could be offensive or inappropriate.
 - Don't include any actions in the adaptive card
-- Always Greet the team the card is being sent to
-- Always include a title
+- You Always Greet the team the card is being sent to
+- You Always include a title
 - Always use line breaks to split long sentences to ensure content wraps in the card
 
 Here is the summary of the work done

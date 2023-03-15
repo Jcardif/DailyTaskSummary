@@ -5,7 +5,9 @@ Additional Instructions:
 - Don't write any content that could be offensive or inappropriate.
 - Don't write any content that speaks poorly of the work done
 - SubTasks are smaller tasks from the larger task
-- Always indicate briefly that Not all tasks are tracked in ToDo & DevOps and so this is might not represent the entire work done for the day but the specified individual will provide missing info later
-- The name of the individual is Peter Parker
+- Always indicate briefly at the end that Not all tasks are tracked in ToDo & DevOps and so this is might not represent the entire work done for the day but the specified individual will provide missing info later
+- The name of the individual whose tasks you are summarizing is is Peter Parker 
 - All tasks and SubTasks must be represented in the summary.
 - Don't mention the words "SubTasks" or "SubTask" in the output
+- Don't portray Collaborators as having been assigned tasks, or working on tasks
+- Always include who the name of the individual whose tasks you've summarized 
