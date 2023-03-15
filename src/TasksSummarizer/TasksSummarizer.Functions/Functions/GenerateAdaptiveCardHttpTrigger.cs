@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Configuration;
@@ -31,8 +32,12 @@ namespace TasksSummarizer.Functions.Functions
             
             if (string.IsNullOrEmpty(taskSummary))
             {
+                var error = new { error = "Please pass a taskSummary in the request body" };
+                
                 response = req.CreateResponse(HttpStatusCode.BadRequest);
-                await response.WriteStringAsync("Please pass a taskSummary in the request body");
+                await response.WriteAsJsonAsync(error);
+
+                return response;
             }
 
             // Get settings from local.setting
@@ -53,8 +58,10 @@ namespace TasksSummarizer.Functions.Functions
             var prompt = GetAdaptiveCardPrompt(taskSummary, baseSystemMessage);
             var openAiResponse = await chatService.CreateCompletionAsync(prompt);
 
+            var card = new { adaptiveCard = openAiResponse?.Choices?.FirstOrDefault()?.Text ?? "" };
+
             response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteStringAsync(openAiResponse?.Choices?.FirstOrDefault()?.Text ?? "Nothing to show");
+            await response.WriteAsJsonAsync(card);
 
             return response;
         }

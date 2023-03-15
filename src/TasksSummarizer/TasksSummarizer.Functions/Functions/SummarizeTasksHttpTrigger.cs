@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Configuration;
@@ -31,8 +32,11 @@ namespace TasksSummarizer.Functions.Functions
 
             if (items is null || items.Count == 0)
             {
+                var error = new { error = "Please pass valid tasks in  the request body" };
+                
                 response = req.CreateResponse(HttpStatusCode.BadRequest);
-                await response.WriteStringAsync("Please pass a list of task items");
+                await response.WriteAsJsonAsync(error);
+                
                 return response;
             }
 
@@ -56,8 +60,10 @@ namespace TasksSummarizer.Functions.Functions
             var prompt = GetPromptFromTasks(items, baseSystemMessage);
             var openAiResponse = await chatService.CreateCompletionAsync(prompt);
 
-            response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteStringAsync(openAiResponse?.Choices?.FirstOrDefault()?.Text ?? "Nothing to show");
+            var summary = new { taskSummary = openAiResponse?.Choices?.FirstOrDefault()?.Text ?? "" };
+
+           response = req.CreateResponse(HttpStatusCode.OK);
+           await response.WriteAsJsonAsync(summary);   
 
             return response;
         }

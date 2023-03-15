@@ -6,37 +6,37 @@ namespace TaskSummarizer.Shared.Models
     public class OpenAiResponse
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [JsonProperty("object")]
-        public string Object { get; set; }
+        public string? Object { get; set; }
 
         [JsonProperty("created")]
         public long Created { get; set; }
 
         [JsonProperty("model")]
-        public string Model { get; set; }
+        public string? Model { get; set; }
 
         [JsonProperty("choices")]
-        public List<Choice> Choices { get; set; }
+        public List<Choice>? Choices { get; set; }
 
         [JsonProperty("usage")]
-        public Usage Usage { get; set; }
+        public Usage? Usage { get; set; }
     }
 
     public class Choice
     {
         [JsonProperty("text")]
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
         [JsonProperty("index")]
         public long Index { get; set; }
 
         [JsonProperty("finish_reason")]
-        public string FinishReason { get; set; }
+        public string? FinishReason { get; set; }
 
         [JsonProperty("logprobs")]
-        public object Logprobs { get; set; }
+        public object? Logprobs { get; set; }
     }
 
     public class Usage
