@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Configuration;
@@ -24,11 +25,22 @@ namespace TasksSummarizer.Functions.Functions
         [Function("SummarizeTasksHttpTrigger")]
         public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
         {
+            HttpResponseData? response;
+
+            var name = req.Url.Query.Contains("name") ? req.Url.Query.Split("=")[1] : null;
+
+            if (string.IsNullOrEmpty(name))
+            {
+                var error = new { error = "Please pass name in the query string" };
+                response = req.CreateResponse(HttpStatusCode.BadRequest);
+                await response.WriteAsJsonAsync(error);
+
+                return response;
+            }
+
             // get tasksSummary from json body
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var items = JsonConvert.DeserializeObject<List<TaskItem>>(requestBody);
-
-            HttpResponseData? response;
 
             if (items is null || items.Count == 0)
             {
@@ -40,7 +52,7 @@ namespace TasksSummarizer.Functions.Functions
                 return response;
             }
 
-            
+
 
             // Get settings from local.setting
             var config = new ConfigurationBuilder()
@@ -56,7 +68,7 @@ namespace TasksSummarizer.Functions.Functions
             var filePath = Path.Combine(Environment.CurrentDirectory, "Prompts", "SummarizeText.txt");
             var baseSystemMessage = await File.ReadAllTextAsync(filePath);
 
-            baseSystemMessage = baseSystemMessage.Replace("Peter Parker", "Steven Strange");
+            baseSystemMessage = baseSystemMessage.Replace("Peter Parker", name);
 
             var chatService = new OpenAiChatService(apiKey, baseUrl, deploymentId);
             var prompt = GetPromptFromTasks(items, baseSystemMessage);

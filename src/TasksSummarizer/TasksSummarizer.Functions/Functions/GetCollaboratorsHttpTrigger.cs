@@ -27,7 +27,7 @@ namespace TasksSummarizer.Functions.Functions
 
             if (string.IsNullOrEmpty(collaborators))
             {
-                var error = new { error = "Please pass the collaborators string from devops" };
+                var error = new { collaborators = "" };
 
                 response = req.CreateResponse(HttpStatusCode.BadRequest);
                 await response.WriteAsJsonAsync(error);
