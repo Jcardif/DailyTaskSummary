@@ -27,9 +27,11 @@ namespace TasksSummarizer.Functions.Functions
         {
             HttpResponseData? response;
 
-            var name = req.Url.Query.Contains("name") ? req.Url.Query.Split("=")[1] : null;
+            // get name of the user sending tasks
+            var uri = new Uri(req.Url.ToString());
+            var query = QueryHelpers.ParseQuery(uri.Query);
 
-            if (string.IsNullOrEmpty(name))
+            if (!query.ContainsKey("name") || string.IsNullOrEmpty(query["name"]))
             {
                 var error = new { error = "Please pass name in the query string" };
                 response = req.CreateResponse(HttpStatusCode.BadRequest);
@@ -37,6 +39,8 @@ namespace TasksSummarizer.Functions.Functions
 
                 return response;
             }
+
+            var name = query["name"];
 
             // get tasksSummary from json body
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
