@@ -351,3 +351,5 @@ MigrationBackup/
 
 
 .vs/
+.vscode/
+./vscode/
